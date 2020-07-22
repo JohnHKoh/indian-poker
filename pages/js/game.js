@@ -22,13 +22,22 @@ $("#startGame").click(function() {
 
 socket.on('newCard', (card) => {
     $("body").load("inGame.html", () => {
-        $("#card").attr("src", "cards/" + card);
-        $("#reshuffle").click(() => {
-            socket.emit('startGame', code);
-        });
         $("#exit").click(() => {
             socket.emit('endGame', code);
         });
+        var timer = 5;
+        var countdown = setInterval(function () {
+            $("#countdown").text(timer);
+            console.log(timer);
+            if (--timer < 0) {
+                clearInterval(countdown);
+                $("#instructions").css("display","none");
+                $("#card").attr("src", "cards/" + card);
+                $("#reshuffle").click(() => {
+                    socket.emit('startGame', code);
+                });
+            }
+        }, 1000);
     });
 });
 
