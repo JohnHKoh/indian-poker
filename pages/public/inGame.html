@@ -1,4 +1,9 @@
-<!--How do I get this file off static...-->
+<!--How do I get this file off static... Literally the hackiest thing ever -->
+<script>
+if (window.location.pathname === "/inGame.html") {
+    window.location.href = "join.html?code=inGame.html";
+}
+</script>
 
 <div class="btn-group d-flex header" role="group" aria-label="Basic example">
     <button id="reshuffle" type="button" class="btn btn-primary btn-half">Reshuffle</button>
