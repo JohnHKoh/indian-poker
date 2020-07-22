@@ -1,0 +1,1 @@
+Indian Poker, better to be played on mobile devices.
