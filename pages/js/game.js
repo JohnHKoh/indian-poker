@@ -13,9 +13,14 @@ socket.emit('joinRoom', {code, name});
 
 socket.on('roomUsers', ({room, users}) => {
     $("#roomCode").text('Room Code: ' + room);
+    let i = 0;
     $("#usersList").html(`
-        ${users.map(user => `<li class="list-group-item">${user.username}</li>`).join('')}
+        ${users.map(user => `<li id="${"player" + i++}" class="list-group-item"></li>`).join('')}
     `);
+    for (let j = 0; j < i; j++) {
+        let text = document.createTextNode(users[j].username);
+        $("#player" + j).append(text);
+    }
 });
 
 $("#startGame").click(function() {
