@@ -40,7 +40,7 @@ io.on('connection', socket => {
     });
     socket.on('joinGame', ({name, room}) => {
         room = room.toUpperCase();
-        if (isValidRoom(room)) {
+        if (isValidRoom(room) && io.sockets.adapter.rooms[room]) {
             if (io.sockets.adapter.rooms[room].length >= 52) {
                 socket.emit('maxPlayersReached');
             }
