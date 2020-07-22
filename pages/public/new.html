@@ -26,18 +26,9 @@
                     </div>
                     <div id="noNameError"></div>
                 </div>
-                <div class="mb-2">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><i class="fas fa-hashtag"></i></div>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Room Code" maxlength="4" id="roomInput" aria-describedby="roomHelp">
-                    </div>
-                    <div id="noRoomError"></div>
-                </div>
             </div>
             <div class="col text-center">
-                <a class="btn btn-outline-primary mx-1" id="joinGame">Join</a>
+                <a class="btn btn-outline-primary mx-1" id="newGame">Start</a>
                 <a href="/" class="btn btn-outline-secondary mx-1">Back</a>
             </div>
         </form>
@@ -47,6 +38,7 @@
 </div>
 
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.4/qs.min.js" integrity="sha512-BHtomM5XDcUy7tDNcrcX1Eh0RogdWiMdXl3wJcKB3PFekXb3l5aDzymaTher61u6vEZySnoC/SAj2Y/p918Y3w==" crossorigin="anonymous"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/joiner.js"></script>
 </html>

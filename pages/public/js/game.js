@@ -8,7 +8,7 @@ code = code.toUpperCase();
 
 let countdown = false;
 
-//history.replaceState({}, null, code);
+history.replaceState({}, null, code);
 socket.emit('joinRoom', {code, name});
 
 socket.on('roomUsers', ({room, users}) => {
@@ -69,5 +69,9 @@ socket.on('dealCard', (card) => {
 });
 
 socket.on('returnToLobby', () => {
-    window.location.href = "game.html?code=" + code + "&name=" + name;
+    window.location.href = "game?code=" + code + "&name=" + name;
+});
+
+socket.on('noSuchRoom', () => {
+    window.location.href = "join.html?code=" + code + "&error=invalidCode";
 });

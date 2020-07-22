@@ -1,5 +1,17 @@
 const socket = io();
 
+let {code, error} = Qs.parse(location.search, {
+    ignoreQueryPrefix: true
+});
+
+if (code) {
+    $("#roomInput").val(code);
+}
+
+if (error === "invalidCode") {
+    $("#noRoomError").html("<small id=\"roomHelp\" class=\"form-text text-danger mt-0\">Room does not exist.</small>");
+}
+
 $("#newGame").click(function() {
     $("#noNameError").empty();
     const name = $("#nameInput").val();
@@ -29,7 +41,7 @@ $("#joinGame").click(function() {
 
 socket.on('roomCreated', code => {
     const name = $("#nameInput").val();
-    window.location.href = "game.html?code=" + code + "&name=" + name;
+    window.location.href = "game?code=" + code + "&name=" + name;
 });
 
 socket.on('maxPlayersReached', () => {

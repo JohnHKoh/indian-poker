@@ -4,21 +4,40 @@ const express = require('express');
 const socketio = require('socket.io');
 const {makeCode, shuffle} = require('./utils/generator.js');
 const {userJoin, getRoomUsers, getUserById, userLeave} = require('./utils/users.js');
+const {addRoom, isValidRoom} = require('./utils/rooms.js');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-app.use(express.static(path.join(__dirname, 'pages')));
+app.use(express.static(path.join(__dirname, 'pages/public')));
+
+app.get('/game', (req, res) => {
+    if (!req.query.code) {
+        res.redirect('join.html?code=game'); // Literally so hacky
+    }
+    else if (!req.query.name) {
+        res.redirect('join.html?code=' + req.query.code);
+    }
+    else {
+        res.sendFile(path.join(__dirname, 'pages/game.html'));
+    }
+
+});
+
+app.get('/:id', (req, res) => {
+    res.redirect('join.html?code=' + req.params.id);
+});
 
 io.on('connection', socket => {
     socket.on('newGame', () => {
         const code = makeCode(4);
+        addRoom(code);
         socket.emit('roomCreated', code);
     });
     socket.on('joinGame', ({name, room}) => {
         room = room.toUpperCase();
-        if (Object.keys(io.sockets.adapter.rooms).includes(room)) {
+        if (isValidRoom(room)) {
             if (io.sockets.adapter.rooms[room].length >= 52) {
                 socket.emit('maxPlayersReached');
             }
@@ -32,6 +51,10 @@ io.on('connection', socket => {
     });
 
     socket.on('joinRoom', ({name, code}) => {
+        if (!isValidRoom(code)) {
+            socket.emit('noSuchRoom');
+            return;
+        }
         userJoin(socket.id, name, code);
         socket.join(code);
         io.to(code).emit('roomUsers', {
@@ -58,9 +81,13 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
        const user = userLeave(socket.id);
        if (user) {
+           let users = getRoomUsers(user.room);
+           if (users.length === 0) {
+
+           }
            io.to(user.room).emit('roomUsers', {
                room: user.room,
-               users: getRoomUsers(user.room)
+               users: users
            });
        }
     });
