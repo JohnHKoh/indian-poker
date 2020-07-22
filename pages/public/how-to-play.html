@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Indian Poker</title>
+</head>
+<body>
+<div class="container py-3">
+    <h1 class="text-center">Indian Poker</h1>
+    <hr>
+    <div class="row justify-content-center">
+        <div class="text-left">
+            <h3>The Rules</h3>
+            <h6>Objective</h6>
+            <p>In this game, you can see everyone else's cards but you cannot see your own. The object of the game is to
+                guess your own card's ranking and value.
+                <br><br>Your <b>ranking</b> is how high your card is compared to others, with Ace being the highest and 2 being the lowest.
+                For example, in a group of four, if you are the highest card, your ranking is first, or if you are the lowest card, you are fourth.
+                Ties are explained further below.<br><br>
+                Your <b>value</b> is the number or face on the card. There are 13 unique values, as suit does not matter in this game.
+                <br><br>So how do you guess your ranking and value when you cannot see your own card? This game is all about gaining <b>information</b>
+                from others. At first, someone starts by taking a guess at their
+                own rank, and then in a clockwise direction, everyone else does the same. After everyone has gone, everyone goes around
+                once more, and this time, each player is to guess their own ranking and value.
+                <br><br>Based on others' guesses, you may be able to get an idea of what your card may be. This is a collaborative game. If everyone
+                gets their guesses completely correct, everyone wins.</p>
+            <h6>Pairs, Triplets, Two Pairs, and More</h6>
+            <p>One additional aspect of this game is that before anyone guesses, players are allowed to reveal if they see any tied values on the cards of other players,
+                without specifying which players have tied values. Any player may call out what they see, but they can only share one piece
+                of information. In addition, once a certain piece of information has been stated, another player cannot say the same thing.
+                <br><br>Furthermore, information <b>must</b> be said in a certain order, which is as follows: one pair, one triplet, one quad, two pair, two triplet, two quads, etc.
+                For example, someone may not say they see two pairs before someone else in the group claims they see one pair.
+                <br><br>If there are ties, the ranking of the players with identical values are also identical, meaning there will be <b>less ranks in total</b>. For example, if two people have Aces,
+                they are both first, and the next highest card would be second place (as opposed to third).
+                <br><br><b>The last person to say something regarding this type of information starts the game.</b> If no one says anything, any person can start.</p>
+            <h3>Basic Strategies</h3>
+            <h6>Your Initial Guess</h6>
+            <p>Do you see many high cards (e.g. Aces, Kings, Queens)? Perhaps the guess of your rank should be on the lower end. Conversely, do you
+            see many low cards (e.g. 2's, 3's, 4's)? Then your guess of your rank may be on the higher end. Or maybe you see a large gap between cards, where some players have
+            very low cards and others have very high cards. Then, you may likely want to guess that your rank is somewhere in the middle of these.</p>
+            <h6>Using Others' Guesses</h6>
+            <p>Ask yourself why others might guess the way they did. Perhaps you only see low cards, and the person next to you guesses that they are in second place. This
+            may hint at the fact that your card may actually be on the higher end, for if your card were as low as everyone else's, the other guesser may have said that they were in first. Use this
+            information from all the other guessers to try to place yourself somewhere on the spectrum on rankings.</p>
+            <h6>But You Don't See a Pair?</h6>
+            <p>Someone in your group has called out they see a pair, meaning that two people have the same valued cards. But,
+            what if you don't see a pair? That means <b>you are part of the pair</b>. Try your best to find out who your pair
+            may be. It could be anyone else in the circle, except, of course, the person that claimed they see the pair.</p>
+        </div>
+    </div>
+    <div class="col text-center">
+        <a href="/" class="btn btn-outline-secondary mt-4">Back</a>
+    </div>
+    <hr>
+
+</div>
+
+</body>
+</html>
