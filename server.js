@@ -35,11 +35,14 @@ io.on('connection', socket => {
         })
     });
 
-    socket.on('startGame', (code) => {
+    socket.on('startGame', (data) => {
+        let code = data.code;
+        let reshuffle = data.reshuffle;
         let users = getRoomUsers(code);
         let cards = shuffle(users.length);
+        var action = reshuffle === 1 ? 'dealCard' : 'newCard';
         for (let i = 0; i < users.length; i++) {
-            io.to(users[i].id).emit('newCard', cards[i]);
+            io.to(users[i].id).emit(action, cards[i]);
         }
     });
 
