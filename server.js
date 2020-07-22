@@ -19,7 +19,12 @@ io.on('connection', socket => {
     socket.on('joinGame', ({name, room}) => {
         room = room.toUpperCase();
         if (Object.keys(io.sockets.adapter.rooms).includes(room)) {
-            socket.emit('roomCreated', room);
+            if (io.sockets.adapter.rooms[room].length >= 52) {
+                socket.emit('maxPlayersReached');
+            }
+            else {
+                socket.emit('roomCreated', room);
+            }
         }
         else {
             socket.emit('noSuchRoom');

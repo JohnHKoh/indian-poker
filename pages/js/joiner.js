@@ -32,6 +32,10 @@ socket.on('roomCreated', code => {
     window.location.href = "game.html?code=" + code + "&name=" + name;
 });
 
+socket.on('maxPlayersReached', () => {
+    $("#noRoomError").html("<small id=\"roomHelp\" class=\"form-text text-danger mt-0\">Maximum number of players in room reached.</small>");
+});
+
 socket.on('noSuchRoom', () => {
     $("#noRoomError").html("<small id=\"roomHelp\" class=\"form-text text-danger mt-0\">Room does not exist.</small>");
 });
