@@ -22,11 +22,14 @@ app.get('/game', (req, res) => {
     else {
         res.sendFile(path.join(__dirname, 'pages/game.html'));
     }
-
 });
 
 app.get('/:id', (req, res) => {
     res.redirect('join.html?code=' + req.params.id);
+});
+
+app.all('*', (req, res) => {
+    res.redirect('/');
 });
 
 io.on('connection', socket => {
