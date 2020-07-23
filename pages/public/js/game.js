@@ -4,6 +4,18 @@ let {code, name} = Qs.parse(location.search, {
     ignoreQueryPrefix: true
 });
 
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+$("#mobileCheck").change(function() {
+        socket.emit('mobileCheck', this.checked);
+});
+
+socket.on('checkChanged', checked => {
+    $("#mobileCheck").prop('checked', checked);
+});
+
 code = code.toUpperCase();
 
 let countdown = false;
@@ -11,8 +23,9 @@ let countdown = false;
 history.replaceState({}, null, code);
 socket.emit('joinRoom', {code, name});
 
-socket.on('roomUsers', ({room, users}) => {
+socket.on('roomUsers', ({room, users, checked}) => {
     $("#roomCode").text('Room Code: ' + room);
+    $("#mobileCheck").prop('checked', checked);
     let i = 0;
     $("#usersList").html(`
         ${users.map(user => `<li id="${"player" + i++}" class="list-group-item"></li>`).join('')}
