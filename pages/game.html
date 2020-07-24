@@ -20,22 +20,28 @@
             <h5 id="roomCode">Room Code: </h5>
         </div>
     </div>
-    <div class="row justify-content-center mt-2 mb-1">Connected Players</div>
-    <div class="row justify-content-center">
-        <div class="col-8 text-center">
-            <ul class="list-group" id="usersList"></ul>
-        </div>
-    </div>
-    <div class="col text-center pt-3">
+    <div id="gameContent">
+        <div class="row justify-content-center mt-2 mb-1">Connected Players</div>
         <div class="row justify-content-center">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="mobileCheck" disabled>
-                <label class="form-check-label">Mobile Game</label>
-                <i class="fa fa-question-circle" style="height:0.9em;" data-toggle="tooltip" title="You will be playing an in-person game, with everyone connected on mobile devices."></i>
+            <div class="col-8 text-center">
+                <ul class="list-group" id="usersList"></ul>
+            </div>
+        </div>
+        <div class="col text-center pt-3">
+            <div class="row justify-content-center">
+                <div id="checkform" class="form-check">
+                    <input type="checkbox" class="form-check-input" id="mobileCheck">
+                    <label id="checklabel" class="form-check-label">Mobile Game</label>
+                    <i id="checkicon"
+                       class="fa fa-question-circle"
+                       style="height:0.9em;"
+                       data-toggle="tooltip"
+                       title="You will be playing an in-person game, with everyone connected on mobile devices.">
+                    </i>
+                </div>
             </div>
         </div>
     </div>
-
     <div class="col text-center py-3">
         <a class="btn btn-outline-primary mx-1" id="startGame">Start</a>
         <a href="/" class="btn btn-outline-secondary mx-1">Back</a>

@@ -2,9 +2,25 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
-const {makeCode, shuffle} = require('./utils/generator.js');
-const {userJoin, getRoomUsers, getUserById, userLeave} = require('./utils/users.js');
-const {addRoom, isValidRoom, getChecked, setChecked, removeRoom} = require('./utils/rooms.js');
+const {
+    makeCode,
+    shuffle
+    } = require('./utils/generator.js');
+const {
+    userJoin,
+    getRoomUsers,
+    getUserById,
+    userLeave
+    } = require('./utils/users.js');
+const {
+    addRoom,
+    isValidRoom,
+    getChecked,
+    setChecked,
+    getCards,
+    setCards,
+    removeRoom
+    } = require('./utils/rooms.js');
 
 const app = express();
 const server = http.createServer(app);
@@ -92,14 +108,37 @@ io.on('connection', socket => {
     }
 
     function startOnlineGame(code, reshuffle) {
-        io.to(code).emit('returnToLobby');
+        let users = getRoomUsers(code);
+        let cards = shuffle(users.length);
+        setCards(code, cards);
+        io.to(code).emit('requestInit', code);
     }
+
+    socket.on('requestCards', code => {
+        let users = getRoomUsers(code);
+        let cards = getCards(code);
+        let currUser = users.findIndex(user => user.id === socket.id);
+        if (currUser !== -1) {
+            cards[currUser] = "RED_BACK.svg";
+        }
+        socket.emit('sendCards', cards);
+    });
 
     socket.on('mobileCheck', (checked) => {
         let room = Object.keys(socket.rooms)[1];
         if (room) {
             setChecked(room, checked);
             io.to(room).emit('checkChanged', checked);
+        }
+    });
+
+    socket.on('revealCard', () => {
+        let currUser = getUserById(socket.id);
+        let users = getRoomUsers(currUser.room);
+        let cards = getCards(currUser.room);
+        const index = users.findIndex(user => user.id === currUser.id);
+        if (index !== -1) {
+            socket.emit('revealToUser', cards[index]);
         }
     });
 

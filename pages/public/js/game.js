@@ -8,8 +8,16 @@ $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-$("#mobileCheck").change(function() {
-        socket.emit('mobileCheck', this.checked);
+$("#mobileCheck, #checkicon").click((e)=> {
+    e.stopPropagation();
+    return true;
+});
+
+$("#checkform").click(function() {
+    let box = $("#mobileCheck");
+    let checked = box.prop('checked');
+    box.prop('checked', !checked);
+    socket.emit('mobileCheck', !checked);
 });
 
 socket.on('checkChanged', checked => {
@@ -19,11 +27,13 @@ socket.on('checkChanged', checked => {
 code = code.toUpperCase();
 
 let countdown = false;
+let usersList = [];
 
 history.replaceState({}, null, code);
 socket.emit('joinRoom', {code, name});
 
 socket.on('roomUsers', ({room, users, checked}) => {
+    usersList = users;
     $("#roomCode").text('Room Code: ' + room);
     $("#mobileCheck").prop('checked', checked);
     let i = 0;
@@ -80,6 +90,55 @@ socket.on('dealCard', (card) => {
         }
     }, 1000);
 });
+
+socket.on('requestInit', code => {
+   socket.emit('requestCards', code);
+});
+
+socket.on('sendCards', cards => {
+    $("body").load("onlineGame.html", () => {
+        $("#roomCode").text('Room Code: ' + code);
+        $("#exit").click(() => {
+            socket.emit('endGame', code);
+        });
+        var list = $("#list");
+        var zero_start = 0; // if you want to start from a different position, should be positive
+
+        var updateLayout = function(listItems){
+            var offsetAngle = (360 / (listItems.length));
+            for(var i = 0; i < listItems.length; i ++){
+                var rotateAngle = zero_start + (offsetAngle * i || 0);
+
+                $(listItems[i]).css("transform", "rotate(" + rotateAngle + "deg) translate(0px, -200px) rotate(-" + rotateAngle + "deg)")
+            }
+        };
+
+        for (i = 0; i < cards.length; i++) {
+            let card = cards[i];
+            let user = usersList[i];
+            var src = 'cards/' + card;
+            let id = card === "RED_BACK.svg" ? `id="userCard"` : "";
+            var listItem = $("" +
+                "<li class='list-item'>" +
+                "<img class='card-sm' src='" + src + "' " + id + ">" +
+                "<p class='text-center'>" + user.username + "</p>" +
+                "</li>");
+            list.append(listItem);
+            var listItems = $(".list-item");
+            updateLayout(listItems);
+        }
+
+        $("#reveal").click(() => {
+            socket.emit('revealCard');
+        });
+
+        socket.on('revealToUser', card => {
+            $("#userCard").attr('src', 'cards/' + card);
+            $("#reveal").attr('disabled', true);
+        });
+    });
+});
+
 
 socket.on('returnToLobby', () => {
     window.location.href = "game?code=" + code + "&name=" + name;

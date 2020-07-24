@@ -29,6 +29,7 @@ $("#joinGame").click(function() {
     const name = $("#nameInput").val();
     const room = $("#roomInput").val();
     if (name === '') {
+        console.log('here');
         $("#noNameError").html("<small id=\"nameHelp\" class=\"form-text text-danger mt-0\">Input a name.</small>");
     }
     else if (room === '') {

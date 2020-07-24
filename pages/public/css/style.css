@@ -1,6 +1,6 @@
 img.card {
 	/* Absolute centering */
-	position: fixed;
+	position: absolute;
 	/*top: 0;*/
 	bottom: 0;
 	left: 0;
@@ -20,12 +20,16 @@ img.card {
 	border:0;
 }
 
-html,body {
-	height: 100%;
-	width: 100%;
-	overflow: hidden;
-	position: fixed;
+img.card-sm {
+	width: 86px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: initial;
+	box-sizing: initial;
 }
+
+
 
 .btn-half {
 	width:50%;
@@ -56,21 +60,20 @@ input[type=checkbox] {
 }
 
 #list{
-	background-color: blue;
 	height: 400px;
 	width: 400px;
 	border-radius: 50%;
 	position: relative;
+	padding: 0;
 }
 
 .list-item{
 	list-style: none;
-	background-color: red;
-	height: 50px;
-	width: 50px;
+	height: 70px;
+	width: 40%;
 	position: absolute;
 	top: 50%;
-	left: 50%;
-	margin-left: -25px;
+	left: 30%;
+	margin-left: 0px;
 	margin-top: -25px;
 }
