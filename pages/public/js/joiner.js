@@ -12,6 +12,14 @@ if (error === "invalidCode") {
     $("#noRoomError").html("<small id=\"roomHelp\" class=\"form-text text-danger mt-0\">Room does not exist.</small>");
 }
 
+$('input').keydown(function(e){
+    if(e.keyCode == 13)
+    {
+        e.preventDefault();
+        $("#" + $(this).data('target')).click();
+    }
+});
+
 $("#newGame").click(function() {
     $("#noNameError").empty();
     const name = $("#nameInput").val();
