@@ -154,8 +154,10 @@ io.on('connection', socket => {
                setTimeout(function(){
                    users = getRoomUsers(user.room);
                    if (users.length === 0) {
-                       console.log('Time passed, deleting room ' + user.room);
-                       removeRoom(user.room);
+                       setTimeout(function() { // Do setTimeout twice so you have to be really unlucky for room to die
+                           console.log('Time passed, deleting room ' + user.room);
+                           removeRoom(user.room);
+                       }, 5000);
                    }
                }, 5000); // Remove empty rooms after 10 seconds
            }
