@@ -146,7 +146,7 @@ socket.on('sendCards', cards => {
                 "      <label class=\"input-group-text\">Guess 1</label>\n" +
                 "    </div>\n" +
                 "    <select class=\"custom-select rank\" id='firstguess-" + i + "' " + disabled + ">\n" +
-                "      <option hidden>-</option>\n" +
+                "      <option>-</option>\n" +
                 "    </select>\n" +
                 "  </div>\n" +
                 "  <div class=\"input-group input-group-sm mb-3\">\n" +
@@ -154,10 +154,10 @@ socket.on('sendCards', cards => {
                 "      <label class=\"input-group-text\">Guess 2</label>\n" +
                 "    </div>\n" +
                 "    <select class=\"custom-select rank\" id='secondguess-a-" + i + "' " + disabled + ">\n" +
-                "      <option hidden>-</option>\n" +
+                "      <option>-</option>\n" +
                 "    </select>\n" +
                 "    <select class=\"custom-select\" id='secondguess-b-" + i + "' " + disabled + " style=\"padding-right: 0;\">\n" +
-                "      <option hidden>-</option>\n" +
+                "      <option>-</option>\n" +
                 "      <option value='2'>2</option>\n" +
                 "      <option value='3'>3</option>\n" +
                 "      <option value='4'>4</option>\n" +
