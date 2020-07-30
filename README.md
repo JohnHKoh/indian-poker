@@ -1,5 +1,5 @@
 # Indian Poker
-As of now, this web-app is played ideally with only mobile devices. Supports different rooms. 
+As of now, this "non-mobile" version of the game is not formatted well with mobile devices. Supports different rooms. 
 Written in Node.JS with Express and Socket.io. Cards assets taken from https://github.com/richardschneider/cardsJS.
 
 ### The Rules

@@ -1,7 +1,7 @@
 var rooms = []; // Hopefully one day we can reuse io.sockets.adapter.rooms...
 
 function addRoom(code) {
-    let checked = true;
+    let checked = false;
     let cards = [];
     let inGame = false;
     let room = {code, checked, cards, inGame};
