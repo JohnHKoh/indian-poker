@@ -139,6 +139,7 @@ io.on('connection', socket => {
         const index = users.findIndex(user => user.id === currUser.id);
         if (index !== -1) {
             socket.emit('revealToUser', cards[index]);
+            io.to(currUser.room).emit('revealedUser', currUser.username)
         }
     });
 

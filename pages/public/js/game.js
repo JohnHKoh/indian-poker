@@ -127,7 +127,7 @@ socket.on('sendCards', cards => {
             var listItem = $("" +
                 "<li class='list-item'>\n" +
                 "  <img class='card-sm' src='" + src + "' " + id + ">\n" +
-                "  <p class='text-center name-plate'>" + user.username + "</p>\n" +
+                "  <p class='text-center name-plate' id='" + user.username + "-name-plate'>" + user.username + "</p>\n" +
                 "  <div class=\"input-group input-group-sm mb-3\">\n" +
                 "    <div class=\"input-group-prepend\">\n" +
                 "      <label class=\"input-group-text\" for=\"inputGroupSelect01\">Guess 1</label>\n" +
@@ -177,6 +177,11 @@ socket.on('sendCards', cards => {
         socket.on('revealToUser', card => {
             $("#userCard").attr('src', 'cards/' + card);
             $("#reveal").attr('disabled', true);
+        });
+
+        socket.on('revealedUser', name => {
+            var nameid = "#" + name + "-name-plate";
+            $(nameid).css("color", "#007bff");
         });
     });
 });
