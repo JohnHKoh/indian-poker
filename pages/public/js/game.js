@@ -124,6 +124,7 @@ socket.on('sendCards', cards => {
             let user = usersList[i];
             var src = 'cards/' + card;
             let id = card === "RED_BACK.svg" ? `id="userCard"` : "";
+            let disabled = card === "RED_BACK.svg" ? "" : "disabled";
             var listItem = $("" +
                 "<li class='list-item'>\n" +
                 "  <img class='card-sm' src='" + src + "' " + id + ">\n" +
@@ -132,7 +133,7 @@ socket.on('sendCards', cards => {
                 "    <div class=\"input-group-prepend\">\n" +
                 "      <label class=\"input-group-text\">Guess 1</label>\n" +
                 "    </div>\n" +
-                "    <select class=\"custom-select rank\" id='firstguess-" + i + "'>\n" +
+                "    <select class=\"custom-select rank\" id='firstguess-" + i + "' " + disabled + ">\n" +
                 "      <option hidden>-</option>\n" +
                 "    </select>\n" +
                 "  </div>\n" +
@@ -140,10 +141,10 @@ socket.on('sendCards', cards => {
                 "    <div class=\"input-group-prepend\">\n" +
                 "      <label class=\"input-group-text\">Guess 2</label>\n" +
                 "    </div>\n" +
-                "    <select class=\"custom-select rank\" id='secondguess-a-" + i + "'>\n" +
+                "    <select class=\"custom-select rank\" id='secondguess-a-" + i + "' " + disabled + ">\n" +
                 "      <option hidden>-</option>\n" +
                 "    </select>\n" +
-                "    <select class=\"custom-select\" id='secondguess-b-" + i + "' style=\"padding-right: 0;\">\n" +
+                "    <select class=\"custom-select\" id='secondguess-b-" + i + "' " + disabled + " style=\"padding-right: 0;\">\n" +
                 "      <option hidden>-</option>\n" +
                 "      <option value='2'>2</option>\n" +
                 "      <option value='3'>3</option>\n" +

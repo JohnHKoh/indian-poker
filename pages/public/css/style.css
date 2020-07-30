@@ -90,3 +90,15 @@ input[type=checkbox] {
 .input-group-lg>.custom-select, .input-group-sm>.custom-select {
 	padding-right: 0;
 }
+
+select[disabled] > option {
+	color: black;
+}
+
+select:disabled {
+	opacity: 1;
+}
+
+.custom-select:disabled {
+	color: black;
+}
