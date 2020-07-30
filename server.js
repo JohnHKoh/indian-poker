@@ -57,7 +57,7 @@ io.on('connection', socket => {
     socket.on('joinGame', ({name, room}) => {
         room = room.toUpperCase();
         if (isValidRoom(room)) {
-            if (io.sockets.adapter.rooms[room] && io.sockets.adapter.rooms[room].length >= 52) {
+            if (io.sockets.adapter.rooms[room] && io.sockets.adapter.rooms[room].length >= 10) {
                 socket.emit('maxPlayersReached');
             }
             else {
