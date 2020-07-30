@@ -204,3 +204,11 @@ socket.on('returnToLobby', () => {
 socket.on('noSuchRoom', () => {
     window.location.href = "join.html?code=" + code + "&error=invalidCode";
 });
+
+socket.on('maxPlayersReached', () => {
+    window.location.href = "join.html?code=" + code + "&error=roomFull";
+});
+
+socket.on('nameInUse', () => {
+    window.location.href = "join.html?code=" + code + "&error=nameInUse";
+});

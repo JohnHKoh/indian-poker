@@ -25,6 +25,7 @@ const {
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+const MAX_PLAYERS = 2;
 
 app.use(express.static(path.join(__dirname, 'pages/public')));
 
@@ -57,8 +58,12 @@ io.on('connection', socket => {
     socket.on('joinGame', ({name, room}) => {
         room = room.toUpperCase();
         if (isValidRoom(room)) {
-            if (io.sockets.adapter.rooms[room] && io.sockets.adapter.rooms[room].length >= 10) {
+            var users = getRoomUsers(room);
+            if (users && users.length >= MAX_PLAYERS) {
                 socket.emit('maxPlayersReached');
+            }
+            else if (users && users.findIndex(user => user.username === name) !== -1) {
+                socket.emit('nameInUse');
             }
             else {
                 if (!io.sockets.adapter.rooms[room]) {
@@ -74,12 +79,18 @@ io.on('connection', socket => {
     });
 
     socket.on('joinRoom', ({name, code}) => {
+        var users = getRoomUsers(code);
         if (!isValidRoom(code)) {
             socket.emit('noSuchRoom');
             return;
         }
-        if (io.sockets.adapter.rooms[code] && io.sockets.adapter.rooms[code].length >= 10) {
+        if (users && users.length >= MAX_PLAYERS) {
             socket.emit('maxPlayersReached');
+            return;
+        }
+        if (users && users.findIndex(user => user.username === name) !== -1) {
+            console.log('here');
+            socket.emit('nameInUse');
             return;
         }
         userJoin(socket.id, name, code);

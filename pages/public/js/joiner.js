@@ -11,6 +11,12 @@ if (code) {
 if (error === "invalidCode") {
     $("#noRoomError").html("<small id=\"roomHelp\" class=\"form-text text-danger mt-0\">Room does not exist.</small>");
 }
+if (error === "roomFull") {
+    $("#noRoomError").html("<small id=\"roomHelp\" class=\"form-text text-danger mt-0\">Maximum number of players in room reached.</small>");
+}
+if (error === "nameInUse") {
+    $("#noRoomError").html("<small id=\"roomHelp\" class=\"form-text text-danger mt-0\">Name is already in use.</small>");
+}
 
 $('input').keydown(function(e){
     if(e.keyCode == 13)
@@ -59,4 +65,8 @@ socket.on('maxPlayersReached', () => {
 
 socket.on('noSuchRoom', () => {
     $("#noRoomError").html("<small id=\"roomHelp\" class=\"form-text text-danger mt-0\">Room does not exist.</small>");
+});
+
+socket.on('nameInUse', () => {
+    $("#noRoomError").html("<small id=\"roomHelp\" class=\"form-text text-danger mt-0\">Name is already in use.</small>");
 });
