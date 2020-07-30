@@ -102,3 +102,11 @@ select:disabled {
 .custom-select:disabled {
 	color: black;
 }
+
+a:not([href]) {
+	color: #007bff;
+}
+
+a:not([href]):hover {
+	color: #fff;
+}
