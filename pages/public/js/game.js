@@ -130,34 +130,34 @@ socket.on('sendCards', cards => {
                 "  <p class='text-center name-plate' id='" + user.username + "-name-plate'>" + user.username + "</p>\n" +
                 "  <div class=\"input-group input-group-sm mb-3\">\n" +
                 "    <div class=\"input-group-prepend\">\n" +
-                "      <label class=\"input-group-text\" for=\"inputGroupSelect01\">Guess 1</label>\n" +
+                "      <label class=\"input-group-text\">Guess 1</label>\n" +
                 "    </div>\n" +
-                "    <select class=\"custom-select rank\" id=\"inputGroupSelect01\">\n" +
+                "    <select class=\"custom-select rank\" id='firstguess-" + i + "'>\n" +
                 "      <option hidden>-</option>\n" +
                 "    </select>\n" +
                 "  </div>\n" +
                 "  <div class=\"input-group input-group-sm mb-3\">\n" +
                 "    <div class=\"input-group-prepend\">\n" +
-                "      <label class=\"input-group-text\" for=\"inputGroupSelect01\">Guess 2</label>\n" +
+                "      <label class=\"input-group-text\">Guess 2</label>\n" +
                 "    </div>\n" +
-                "    <select class=\"custom-select rank\" id=\"inputGroupSelect01\">\n" +
+                "    <select class=\"custom-select rank\" id='secondguess-a-" + i + "'>\n" +
                 "      <option hidden>-</option>\n" +
                 "    </select>\n" +
-                "    <select class=\"custom-select\" id=\"inputGroupSelect01\" style=\"padding-right: 0;\">\n" +
+                "    <select class=\"custom-select\" id='secondguess-b-" + i + "' style=\"padding-right: 0;\">\n" +
                 "      <option hidden>-</option>\n" +
-                "      <option>2</option>\n" +
-                "      <option>3</option>\n" +
-                "      <option>4</option>\n" +
-                "      <option>5</option>\n" +
-                "      <option>6</option>\n" +
-                "      <option>7</option>\n" +
-                "      <option>8</option>\n" +
-                "      <option>9</option>\n" +
-                "      <option>10</option>\n" +
-                "      <option>J</option>\n" +
-                "      <option>Q</option>\n" +
-                "      <option>K</option>\n" +
-                "      <option>A</option>\n" +
+                "      <option value='2'>2</option>\n" +
+                "      <option value='3'>3</option>\n" +
+                "      <option value='4'>4</option>\n" +
+                "      <option value='5'>5</option>\n" +
+                "      <option value='6'>6</option>\n" +
+                "      <option value='7'>7</option>\n" +
+                "      <option value='8'>8</option>\n" +
+                "      <option value='9'>9</option>\n" +
+                "      <option value='10'>10</option>\n" +
+                "      <option value='J'>J</option>\n" +
+                "      <option value='Q'>Q</option>\n" +
+                "      <option value='K'>K</option>\n" +
+                "      <option value='A'>A</option>\n" +
                 "    </select>\n" +
                 "  </div>\n" +
                 "</li>\n");
@@ -167,11 +167,16 @@ socket.on('sendCards', cards => {
         }
 
         for (i = 1; i <= cards.length; i++) {
-            $(".rank").append(`<option>${i}</option>\n`);
+            $(".rank").append(`<option value="${i}">${i}</option>\n`);
         }
 
         $("#reveal").click(() => {
             socket.emit('revealCard');
+        });
+
+        $( "select" ).change(function() {
+            var selected = $(this).children("option:selected").val();
+            socket.emit('guessChanged', {"id": $(this).attr('id'), "option": selected});
         });
 
         socket.on('revealToUser', card => {
@@ -182,6 +187,10 @@ socket.on('sendCards', cards => {
         socket.on('revealedUser', name => {
             var nameid = "#" + name + "-name-plate";
             $(nameid).css("color", "#007bff");
+        });
+
+        socket.on('changeGuess', ({id, option}) => {
+            $("#" + id).val(option);
         });
     });
 });

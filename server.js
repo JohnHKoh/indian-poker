@@ -136,6 +136,11 @@ io.on('connection', socket => {
         }
     });
 
+    socket.on('guessChanged', ({id, option}) => {
+        let currUser = getUserById(socket.id);
+        io.to(currUser.room).emit('changeGuess', {id, option});
+    });
+
     socket.on('revealCard', () => {
         let currUser = getUserById(socket.id);
         let users = getRoomUsers(currUser.room);
