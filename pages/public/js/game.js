@@ -102,14 +102,20 @@ socket.on('sendCards', cards => {
             socket.emit('endGame', code);
         });
         var list = $("#list");
+        var x = cards.length; // for formula purposes...
+        //var height = 100 + (x/Math.sqrt(x) * Math.sqrt(10000 * (x-1)));
+        var height = 150*((x-3)/(x+4)) + (200*x)/Math.sqrt(x);
+        list.css("height", height + "px");
         var zero_start = 0; // if you want to start from a different position, should be positive
 
         var updateLayout = function(listItems){
             var offsetAngle = (360 / (listItems.length));
+            var rad = height/2;
             for(var i = 0; i < listItems.length; i ++){
+
                 var rotateAngle = zero_start + (offsetAngle * i || 0);
 
-                $(listItems[i]).css("transform", "rotate(" + rotateAngle + "deg) translate(0px, -200px) rotate(-" + rotateAngle + "deg)")
+                $(listItems[i]).css("transform", "rotate(" + rotateAngle + "deg) translate(0px, -" + rad + "px) rotate(-" + rotateAngle + "deg)")
             }
         };
 
@@ -119,13 +125,49 @@ socket.on('sendCards', cards => {
             var src = 'cards/' + card;
             let id = card === "RED_BACK.svg" ? `id="userCard"` : "";
             var listItem = $("" +
-                "<li class='list-item'>" +
-                "<img class='card-sm' src='" + src + "' " + id + ">" +
-                "<p class='text-center'>" + user.username + "</p>" +
-                "</li>");
+                "<li class='list-item'>\n" +
+                "  <img class='card-sm' src='" + src + "' " + id + ">\n" +
+                "  <p class='text-center name-plate'>" + user.username + "</p>\n" +
+                "  <div class=\"input-group input-group-sm mb-3\">\n" +
+                "    <div class=\"input-group-prepend\">\n" +
+                "      <label class=\"input-group-text\" for=\"inputGroupSelect01\">Guess 1</label>\n" +
+                "    </div>\n" +
+                "    <select class=\"custom-select rank\" id=\"inputGroupSelect01\">\n" +
+                "      <option hidden>-</option>\n" +
+                "    </select>\n" +
+                "  </div>\n" +
+                "  <div class=\"input-group input-group-sm mb-3\">\n" +
+                "    <div class=\"input-group-prepend\">\n" +
+                "      <label class=\"input-group-text\" for=\"inputGroupSelect01\">Guess 2</label>\n" +
+                "    </div>\n" +
+                "    <select class=\"custom-select rank\" id=\"inputGroupSelect01\">\n" +
+                "      <option hidden>-</option>\n" +
+                "    </select>\n" +
+                "    <select class=\"custom-select\" id=\"inputGroupSelect01\" style=\"padding-right: 0;\">\n" +
+                "      <option hidden>-</option>\n" +
+                "      <option>2</option>\n" +
+                "      <option>3</option>\n" +
+                "      <option>4</option>\n" +
+                "      <option>5</option>\n" +
+                "      <option>6</option>\n" +
+                "      <option>7</option>\n" +
+                "      <option>8</option>\n" +
+                "      <option>9</option>\n" +
+                "      <option>10</option>\n" +
+                "      <option>J</option>\n" +
+                "      <option>Q</option>\n" +
+                "      <option>K</option>\n" +
+                "      <option>A</option>\n" +
+                "    </select>\n" +
+                "  </div>\n" +
+                "</li>\n");
             list.append(listItem);
             var listItems = $(".list-item");
             updateLayout(listItems);
+        }
+
+        for (i = 1; i <= cards.length; i++) {
+            $(".rank").append(`<option>${i}</option>\n`);
         }
 
         $("#reveal").click(() => {

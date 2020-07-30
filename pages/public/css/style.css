@@ -59,15 +59,17 @@ input[type=checkbox] {
 	color: white;
 }
 
-#list{
+#list {
 	height: 400px;
 	width: 400px;
 	border-radius: 50%;
 	position: relative;
 	padding: 0;
+	margin-top: 30px;
+	margin-bottom: 230px;
 }
 
-.list-item{
+.list-item {
 	list-style: none;
 	height: 70px;
 	width: 40%;
@@ -76,4 +78,15 @@ input[type=checkbox] {
 	left: 30%;
 	margin-left: 0px;
 	margin-top: -25px;
+}
+
+.name-plate {
+	margin-bottom:0.4rem;
+	margin-left: -100%;
+	margin-right: -100%;
+	text-align: center;
+}
+
+.input-group-lg>.custom-select, .input-group-sm>.custom-select {
+	padding-right: 0;
 }
