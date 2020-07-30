@@ -78,6 +78,10 @@ io.on('connection', socket => {
             socket.emit('noSuchRoom');
             return;
         }
+        if (io.sockets.adapter.rooms[code] && io.sockets.adapter.rooms[code].length >= 10) {
+            socket.emit('maxPlayersReached');
+            return;
+        }
         userJoin(socket.id, name, code);
         socket.join(code);
         io.to(code).emit('roomUsers', {
