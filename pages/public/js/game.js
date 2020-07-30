@@ -104,7 +104,7 @@ socket.on('sendCards', cards => {
         var list = $("#list");
         var x = cards.length; // for formula purposes...
         //var height = 100 + (x/Math.sqrt(x) * Math.sqrt(10000 * (x-1)));
-        var height = 150*((x-3)/(x+4)) + (200*x)/Math.sqrt(x);
+        var height = 200*((x-1)/(x+3)) + (200*x)/Math.sqrt(x);
         list.css("height", height + "px");
         var zero_start = 0; // if you want to start from a different position, should be positive
 
