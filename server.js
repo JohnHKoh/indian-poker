@@ -100,7 +100,8 @@ io.on('connection', socket => {
         io.to(code).emit('roomUsers', {
             room: code,
             users: getRoomUsers(code),
-            checked: getChecked(code)
+            checked: getChecked(code),
+            inGame: getInGame(code)
         })
     });
 

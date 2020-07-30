@@ -32,10 +32,16 @@ let usersList = [];
 history.replaceState({}, null, code);
 socket.emit('joinRoom', {code, name});
 
-socket.on('roomUsers', ({room, users, checked}) => {
+socket.on('roomUsers', ({room, users, checked, inGame}) => {
     usersList = users;
     $("#roomCode").text('Room Code: ' + room);
     $("#mobileCheck").prop('checked', checked);
+    console.log(inGame);
+    if (inGame) {
+        var start = $("#startGame");
+        start.addClass('disabled');
+        start.text("Game in progress...")
+    }
     let i = 0;
     $("#usersList").html(`
         ${users.map(user => `<li id="${"player" + i++}" class="list-group-item"></li>`).join('')}
@@ -51,7 +57,9 @@ $("#startGame").click(function() {
 });
 
 socket.on('gameInProgress', () => {
-    alert('Game in progress! Please wait.');
+    var start = $("#startGame");
+    start.addClass('disabled');
+    start.text("Game in progress...")
 });
 
 socket.on('newCard', (card) => {
