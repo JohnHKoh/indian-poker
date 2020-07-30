@@ -17,6 +17,8 @@ const {
     isValidRoom,
     getChecked,
     setChecked,
+    getInGame,
+    setInGame,
     getCards,
     setCards,
     removeRoom
@@ -25,7 +27,7 @@ const {
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-const MAX_PLAYERS = 2;
+const MAX_PLAYERS = 10;
 
 app.use(express.static(path.join(__dirname, 'pages/public')));
 
@@ -105,6 +107,11 @@ io.on('connection', socket => {
     socket.on('startGame', (data) => {
         let code = data.code;
         let reshuffle = data.reshuffle;
+        if (getInGame(code)) {
+            socket.emit('gameInProgress');
+            return;
+        }
+        setInGame(code, true);
         if (getChecked(code)) {
             startMobileGame(code, reshuffle);
         }
@@ -164,7 +171,8 @@ io.on('connection', socket => {
     });
 
     socket.on('endGame', (code) => {
-       io.to(code).emit('returnToLobby');
+        setInGame(code, false);
+        io.to(code).emit('returnToLobby');
     });
 
     socket.on('disconnect', () => {

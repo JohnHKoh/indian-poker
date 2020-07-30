@@ -50,6 +50,10 @@ $("#startGame").click(function() {
     socket.emit('startGame', {"code": code});
 });
 
+socket.on('gameInProgress', () => {
+    alert('Game in progress! Please wait.');
+});
+
 socket.on('newCard', (card) => {
     $("body").load("inGame.html", () => {
         $("#exit").click(() => {
