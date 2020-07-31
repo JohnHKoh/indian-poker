@@ -145,7 +145,7 @@ socket.on('sendCards', cards => {
                 "    <div class=\"input-group-prepend\">\n" +
                 "      <label class=\"input-group-text\">Guess 1</label>\n" +
                 "    </div>\n" +
-                "    <select class=\"custom-select rank\" id='firstguess-" + i + "' " + disabled + ">\n" +
+                "    <select class=\"custom-select rank\" id='firstguess-" + username + "' " + disabled + ">\n" +
                 "      <option>-</option>\n" +
                 "    </select>\n" +
                 "  </div>\n" +
@@ -153,10 +153,10 @@ socket.on('sendCards', cards => {
                 "    <div class=\"input-group-prepend\">\n" +
                 "      <label class=\"input-group-text\">Guess 2</label>\n" +
                 "    </div>\n" +
-                "    <select class=\"custom-select rank\" id='secondguess-a-" + i + "' " + disabled + ">\n" +
+                "    <select class=\"custom-select rank\" id='secondguess1-" + username + "' " + disabled + ">\n" +
                 "      <option>-</option>\n" +
                 "    </select>\n" +
-                "    <select class=\"custom-select\" id='secondguess-b-" + i + "' " + disabled + " style=\"padding-right: 0;\">\n" +
+                "    <select class=\"custom-select\" id='secondguess2-" + username + "' " + disabled + " style=\"padding-right: 0;\">\n" +
                 "      <option>-</option>\n" +
                 "      <option value='2'>2</option>\n" +
                 "      <option value='3'>3</option>\n" +
@@ -192,7 +192,18 @@ socket.on('sendCards', cards => {
         $( "select" ).change(function() {
             var selected = $(this).children("option:selected").val();
             var id = $(this).attr('id');
-            socket.emit('guessChanged', {"id": id, "option": selected});
+            let name;
+            if (id.indexOf('-') !== -1) {
+                name = decodeURI(id.substr(id.indexOf('-')+1));
+            }
+            socket.on('sendVerification', verified => {
+                if (verified) {
+                    socket.emit('guessChanged', {"id": id, "option": selected});
+                }
+            });
+            if (name) {
+                socket.emit('verifyUser', name);
+            }
         });
 
         socket.on('revealToUser', card => {
@@ -206,7 +217,7 @@ socket.on('sendCards', cards => {
         });
 
         socket.on('changeGuess', ({id, option}) => {
-            $("#" + id).val(option);
+            $(document.getElementById(id)).val(option);
         });
     });
 });

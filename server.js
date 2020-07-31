@@ -156,6 +156,11 @@ io.on('connection', socket => {
         }
     });
 
+    socket.on('verifyUser', name => {
+       let currUser = getUserById(socket.id);
+       socket.emit('sendVerification', currUser.username === name);
+    });
+
     socket.on('guessChanged', ({id, option}) => {
         let currUser = getUserById(socket.id);
         io.to(currUser.room).emit('changeGuess', {id, option});
