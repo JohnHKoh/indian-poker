@@ -199,6 +199,14 @@ socket.on('sendCards', cards => {
             socket.on('sendVerification', verified => {
                 if (verified) {
                     socket.emit('guessChanged', {"id": id, "option": selected});
+                    let first = $(document.getElementById("firstguess-" + name)).val();
+                    let second1 = $(document.getElementById("secondguess1-" + name)).val();
+                    let second2 = $(document.getElementById("secondguess2-" + name)).val();
+                    if (first !== '-' &&
+                        second1 !== '-' &&
+                        second2 !== '-') {
+                        $("#reveal").click();
+                    }
                 }
             });
             if (name) {
