@@ -36,7 +36,6 @@ socket.on('roomUsers', ({room, users, checked, inGame}) => {
     usersList = users;
     $("#roomCode").text('Room Code: ' + room);
     $("#mobileCheck").prop('checked', checked);
-    console.log(inGame);
     if (inGame) {
         var start = $("#startGame");
         start.addClass('disabled');
@@ -137,10 +136,11 @@ socket.on('sendCards', cards => {
             var src = 'cards/' + card;
             let id = card === "RED_BACK.svg" ? `id="userCard"` : "";
             let disabled = card === "RED_BACK.svg" ? "" : "disabled";
+            var username = encodeURI(user.username);
             var listItem = $("" +
                 "<li class='list-item'>\n" +
                 "  <img class='card-sm' src='" + src + "' " + id + ">\n" +
-                "  <p class='text-center name-plate' id='" + user.username + "-name-plate'>" + user.username + "</p>\n" +
+                "  <p class='text-center name-plate' id='" + username + "-name-plate'></p>\n" +
                 "  <div class=\"input-group input-group-sm mb-3\">\n" +
                 "    <div class=\"input-group-prepend\">\n" +
                 "      <label class=\"input-group-text\">Guess 1</label>\n" +
@@ -176,6 +176,8 @@ socket.on('sendCards', cards => {
                 "</li>\n");
             list.append(listItem);
             var listItems = $(".list-item");
+            let text = document.createTextNode(user.username);
+            $(document.getElementById(username + "-name-plate")).append(text);
             updateLayout(listItems);
         }
 
@@ -189,7 +191,8 @@ socket.on('sendCards', cards => {
 
         $( "select" ).change(function() {
             var selected = $(this).children("option:selected").val();
-            socket.emit('guessChanged', {"id": $(this).attr('id'), "option": selected});
+            var id = $(this).attr('id');
+            socket.emit('guessChanged', {"id": id, "option": selected});
         });
 
         socket.on('revealToUser', card => {
@@ -198,8 +201,8 @@ socket.on('sendCards', cards => {
         });
 
         socket.on('revealedUser', name => {
-            var nameid = "#" + name + "-name-plate";
-            $(nameid).css("color", "#007bff");
+            var username = encodeURI(name);
+            $(document.getElementById(username + "-name-plate")).css("color", "#007bff");
         });
 
         socket.on('changeGuess', ({id, option}) => {
