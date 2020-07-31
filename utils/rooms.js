@@ -63,6 +63,13 @@ function setCards(code, cards) {
     return null;
 }
 
+function cardLeave(code, index) {
+    const roomIndex = rooms.findIndex(room => room.code === code);
+    if (roomIndex !== -1) {
+        return rooms[roomIndex].cards.splice(index, 1)[0];
+    }
+}
+
 function removeRoom(code) {
     const index = rooms.findIndex(room => room.code === code);
     if (index !== -1) {
@@ -79,5 +86,6 @@ module.exports = {
     setInGame,
     getCards,
     setCards,
+    cardLeave,
     removeRoom
 };

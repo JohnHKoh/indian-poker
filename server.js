@@ -21,6 +21,7 @@ const {
     setInGame,
     getCards,
     setCards,
+    cardLeave,
     removeRoom
     } = require('./utils/rooms.js');
 
@@ -177,8 +178,9 @@ io.on('connection', socket => {
     });
 
     socket.on('disconnect', () => {
-       const user = userLeave(socket.id);
+       const [user, index] = userLeave(socket.id);
        if (user) {
+           cardLeave(user.room, index);
            let users = getRoomUsers(user.room);
            if (users.length === 0) {
                setTimeout(function(){
