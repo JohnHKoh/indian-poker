@@ -192,16 +192,17 @@ socket.on('sendCards', cards => {
         $( "select" ).change(function() {
             var selected = $(this).children("option:selected").val();
             var id = $(this).attr('id');
-            let name;
+            let name = "";
             if (id.indexOf('-') !== -1) {
                 name = decodeURI(id.substr(id.indexOf('-')+1));
             }
             socket.on('sendVerification', verified => {
+                var encodedName = encodeURI(name);
                 if (verified) {
                     socket.emit('guessChanged', {"id": id, "option": selected});
-                    let first = $(document.getElementById("firstguess-" + name)).val();
-                    let second1 = $(document.getElementById("secondguess1-" + name)).val();
-                    let second2 = $(document.getElementById("secondguess2-" + name)).val();
+                    let first = $(document.getElementById("firstguess-" + encodedName)).val();
+                    let second1 = $(document.getElementById("secondguess1-" + encodedName)).val();
+                    let second2 = $(document.getElementById("secondguess2-" + encodedName)).val();
                     if (first !== '-' &&
                         second1 !== '-' &&
                         second2 !== '-') {
