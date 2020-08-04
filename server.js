@@ -109,7 +109,7 @@ io.on('connection', socket => {
     socket.on('startGame', (data) => {
         let code = data.code;
         let reshuffle = data.reshuffle;
-        if (getInGame(code)) {
+        if (getInGame(code) && reshuffle !== 1) {
             socket.emit('gameInProgress');
             return;
         }
