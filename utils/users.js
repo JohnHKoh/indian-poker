@@ -6,6 +6,11 @@ function userJoin(id, username, room) {
     return user;
 }
 
+function setUserSocketId(sessionId, socketId) {
+    let user = getUserById(sessionId);
+    user.socketId = socketId;
+}
+
 function getRoomUsers(room) {
     return users.filter(user => user.room === room);
 }
@@ -24,6 +29,7 @@ function userLeave(id) {
 
 module.exports = {
     userJoin,
+    setUserSocketId,
     getRoomUsers,
     getUserById,
     userLeave

@@ -54,9 +54,8 @@ $("#joinGame").click(function() {
     }
 });
 
-socket.on('roomCreated', code => {
-    const name = $("#nameInput").val();
-    window.location.href = "game?code=" + code + "&name=" + name;
+socket.on('roomJoined', (code) => {
+    window.location.href = code;
 });
 
 socket.on('maxPlayersReached', () => {

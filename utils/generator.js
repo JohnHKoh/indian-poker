@@ -1,6 +1,6 @@
 function makeCode(length) {
     var result           = '';
-    var characters       = 'ABCDEFGHJKLMNOPQRSTUVWXYZ0123456789'; // No 'I' cuz confusing lol
+    var characters       = 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789'; // No 'I' or 'O/0' cuz confusing lol
     var charactersLength = characters.length;
     for ( var i = 0; i < length; i++ ) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));

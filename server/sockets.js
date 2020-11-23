@@ -1,10 +1,12 @@
 const socketio = require('socket.io');
+
 const {
     makeCode,
     shuffle
 } = require('../utils/generator.js');
 const {
     userJoin,
+    setUserSocketId,
     getRoomUsers,
     getUserById,
     userLeave
@@ -23,19 +25,46 @@ const {
 } = require('../utils/rooms.js');
 const MAX_PLAYERS = 10;
 
-module.exports.listen = function(server) {
+module.exports.listen = function(server, sessionMiddleware) {
     const io = socketio(server);
 
+    io.use((socket, next) => {
+        sessionMiddleware(socket.request, {}, next);
+    });
+
     io.on('connection', socket => {
-        socket.on('newGame', () => {
+        const session = socket.request.session;
+        const sessionStore = socket.request.sessionStore;
+        const sessionID = socket.request.sessionID;
+        session.cookie.maxAge = null;
+        if (getUserById(sessionID)) setUserSocketId(sessionID, socket.id);
+        session.save();
+
+        function joinRoomAsSession(code, name) {
+            session.code = code;
+            session.name = name;
+            session.save();
+            userJoin(sessionID, name, code);
+            socket.emit('roomJoined', code);
+        }
+
+        socket.on('newGame', name => {
             const code = makeCode(4);
             addRoom(code);
-            socket.emit('roomCreated', code);
+            joinRoomAsSession(code, name)
+        });
+
+        socket.on('getSessionInfo', ()=> {
+            socket.emit('sessionInfoRecv', {
+                sessionName: session.name,
+                sessionCode: session.code,
+                sessionInGame: session.inGame
+            })
         });
         socket.on('joinGame', ({name, room}) => {
             room = room.toUpperCase();
             if (isValidRoom(room)) {
-                var users = getRoomUsers(room);
+                let users = getRoomUsers(room);
                 if (users && users.length >= MAX_PLAYERS) {
                     socket.emit('maxPlayersReached');
                 }
@@ -44,10 +73,10 @@ module.exports.listen = function(server) {
                 }
                 else {
                     if (!io.sockets.adapter.rooms[room]) {
-                        userJoin(socket.id, name, room);
+                        userJoin(sessionID, name, room);
                         socket.join(room);
                     }
-                    socket.emit('roomCreated', room); //Misnomer - actually joins room here
+                    joinRoomAsSession(room, name)
                 }
             }
             else {
@@ -55,22 +84,7 @@ module.exports.listen = function(server) {
             }
         });
 
-        socket.on('joinRoom', ({name, code}) => {
-            var users = getRoomUsers(code);
-            if (!isValidRoom(code)) {
-                socket.emit('noSuchRoom');
-                return;
-            }
-            if (users && users.length >= MAX_PLAYERS) {
-                socket.emit('maxPlayersReached');
-                return;
-            }
-            if (users && users.findIndex(user => user.username === name) !== -1) {
-                console.log('here');
-                socket.emit('nameInUse');
-                return;
-            }
-            userJoin(socket.id, name, code);
+        function joinRoom(code) {
             socket.join(code);
             io.to(code).emit('roomUsers', {
                 room: code,
@@ -78,16 +92,30 @@ module.exports.listen = function(server) {
                 checked: getChecked(code),
                 inGame: getInGame(code)
             })
+        }
+
+        socket.on('joinRoom', (code) => {
+            joinRoom(code);
         });
 
+        socket.on('rejoinRoom', (code) => {
+            joinRoom(code);
+            sendCards(code)
+        });
+
+        function setInGameHandler(code, inGame) {
+            setInGame(code, inGame);
+            io.to(code).emit('setInGame', inGame);
+        }
+
         socket.on('startGame', (data) => {
-            let code = data.code;
-            let reshuffle = data.reshuffle;
-            if (getInGame(code) && reshuffle !== 1) {
+            let code = session.code;
+            let reshuffle = data ? data.reshuffle : false;
+            if (getInGame(code) && !reshuffle) {
                 socket.emit('gameInProgress');
                 return;
             }
-            setInGame(code, true);
+            setInGameHandler(code, true);
             if (getChecked(code)) {
                 startMobileGame(code, reshuffle);
             }
@@ -99,9 +127,9 @@ module.exports.listen = function(server) {
         function startMobileGame(code, reshuffle) {
             let users = getRoomUsers(code);
             let cards = shuffle(users.length);
-            var action = reshuffle === 1 ? 'dealCard' : 'newCard';
+            var action = reshuffle ? 'dealCard' : 'newCard';
             for (let i = 0; i < users.length; i++) {
-                io.to(users[i].id).emit(action, cards[i]);
+                io.to(users[i].socketId).emit(action, cards[i]);
             }
         }
 
@@ -112,14 +140,18 @@ module.exports.listen = function(server) {
             io.to(code).emit('requestInit', code);
         }
 
-        socket.on('requestCards', code => {
+        function sendCards(code) {
             let users = getRoomUsers(code);
             let cards = getCards(code);
-            let currUser = users.findIndex(user => user.id === socket.id);
+            let currUser = users.findIndex(user => user.id === sessionID);
             if (currUser !== -1) {
                 cards[currUser] = "RED_BACK.svg";
             }
             socket.emit('sendCards', cards);
+        }
+
+        socket.on('requestCards', code => {
+            sendCards(code)
         });
 
         socket.on('mobileCheck', (checked) => {
@@ -131,17 +163,17 @@ module.exports.listen = function(server) {
         });
 
         socket.on('verifyUser', name => {
-            let currUser = getUserById(socket.id);
+            let currUser = getUserById(sessionID);
             socket.emit('sendVerification', currUser.username === name);
         });
 
         socket.on('guessChanged', ({id, option}) => {
-            let currUser = getUserById(socket.id);
+            let currUser = getUserById(sessionID);
             io.to(currUser.room).emit('changeGuess', {id, option});
         });
 
         socket.on('revealCard', () => {
-            let currUser = getUserById(socket.id);
+            let currUser = getUserById(sessionID);
             let users = getRoomUsers(currUser.room);
             let cards = getCards(currUser.room);
             const index = users.findIndex(user => user.id === currUser.id);
@@ -152,31 +184,55 @@ module.exports.listen = function(server) {
         });
 
         socket.on('endGame', (code) => {
-            setInGame(code, false);
+            setInGameHandler(code, false);
             io.to(code).emit('returnToLobby');
         });
 
-        socket.on('disconnect', () => {
-            const [user, index] = userLeave(socket.id);
+        function setSessionInGame(val) {
+            session.inGame = val;
+            session.save();
+        }
+
+        socket.on('setSessionInGame', (val) => {
+            setSessionInGame(val);
+        });
+
+        function disconnectUser() {
+            const [user, index] = userLeave(sessionID);
             if (user) {
                 cardLeave(user.room, index);
                 let users = getRoomUsers(user.room);
                 if (users.length === 0) {
-                    setTimeout(function(){
-                        users = getRoomUsers(user.room);
-                        if (users.length === 0) {
-                            setTimeout(function() { // Do setTimeout twice so you have to be really unlucky for room to die
-                                console.log('Time passed, deleting room ' + user.room);
-                                removeRoom(user.room);
-                            }, 5000);
-                        }
-                    }, 5000); // Remove empty rooms after 10 seconds
+                    let deleted = removeRoom(user.room);
+                    if (deleted) console.log(user.room + ' deleted.')
                 }
                 io.to(user.room).emit('roomUsers', {
                     room: user.room,
                     users: users
                 });
             }
+        }
+
+        socket.on('leaveGame', () => {
+            session.name = null;
+            session.code = null;
+            session.save();
+            disconnectUser();
+        });
+
+        socket.on('disconnect', () => {
+            session.cookie.maxAge = 5000;
+            session.save();
+            setTimeout(() => {
+                sessionStore.all((error, sessions) => {
+                    let id_index = 0;
+                    let sessionIsAlive = Object.entries(sessions).filter(element => element[id_index] === sessionID).length > 0;
+                    if (!sessionIsAlive) {
+                        disconnectUser();
+                    }
+                });
+            }, 5000);
+
         });
     });
 
