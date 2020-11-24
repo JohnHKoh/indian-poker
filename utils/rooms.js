@@ -1,91 +1,101 @@
-var rooms = []; // Hopefully one day we can reuse io.sockets.adapter.rooms...
+let rooms = [];
 
-function addRoom(code) {
-    let checked = false;
-    let cards = [];
-    let inGame = false;
-    let room = {code, checked, cards, inGame};
-    rooms.push(room);
-}
+class Rooms {
 
-function isValidRoom(code) {
-    return rooms.findIndex(room => room.code === code) !== -1;
-}
-
-function getChecked(code) {
-    const index = rooms.findIndex(room => room.code === code);
-    if (index !== -1) {
-        return rooms[index].checked;
+    static addRoom(code) {
+        let checked = false;
+        let cards = [];
+        let inGame = false;
+        let isMobileGame = false;
+        let room = {code, checked, cards, inGame, isMobileGame};
+        rooms.push(room);
     }
-    return null;
-}
 
-function setChecked(code, checked) {
-    const index = rooms.findIndex(room => room.code === code);
-    if (index !== -1) {
-        rooms[index].checked = checked;
-        return rooms[index].checked;
+    static isValidRoom(code) {
+        return rooms.findIndex(room => room.code === code) !== -1;
     }
-    return null;
-}
 
-function getInGame(code) {
-    const index = rooms.findIndex(room => room.code === code);
-    if (index !== -1) {
-        return rooms[index].inGame;
+    static getChecked(code) {
+        const index = rooms.findIndex(room => room.code === code);
+        if (index !== -1) {
+            return rooms[index].checked;
+        }
+        return null;
     }
-    return null;
-}
 
-function setInGame(code, inGame) {
-    const index = rooms.findIndex(room => room.code === code);
-    if (index !== -1) {
-        rooms[index].inGame = inGame;
-        return rooms[index].inGame;
+    static setChecked(code, checked) {
+        const index = rooms.findIndex(room => room.code === code);
+        if (index !== -1) {
+            rooms[index].checked = checked;
+            return rooms[index].checked;
+        }
+        return null;
     }
-    return null;
-}
 
-function getCards(code) {
-    const index = rooms.findIndex(room => room.code === code);
-    if (index !== -1) {
-        return [...rooms[index].cards]; // deep copy
+    static getInGame(code) {
+        const index = rooms.findIndex(room => room.code === code);
+        if (index !== -1) {
+            return rooms[index].inGame;
+        }
+        return null;
     }
-    return null;
-}
 
-function setCards(code, cards) {
-    const index = rooms.findIndex(room => room.code === code);
-    if (index !== -1) {
-        rooms[index].cards = cards;
-        return rooms[index].cards;
+    static setInGame(code, inGame) {
+        const index = rooms.findIndex(room => room.code === code);
+        if (index !== -1) {
+            rooms[index].inGame = inGame;
+            return rooms[index].inGame;
+        }
+        return null;
     }
-    return null;
-}
 
-function cardLeave(code, index) {
-    const roomIndex = rooms.findIndex(room => room.code === code);
-    if (roomIndex !== -1) {
-        return rooms[roomIndex].cards.splice(index, 1)[0];
+    static getIsMobileGame(code) {
+        const index = rooms.findIndex(room => room.code === code);
+        if (index !== -1) {
+            return rooms[index].isMobileGame;
+        }
+        return null;
+    }
+
+    static setIsMobileGame(code, isMobileGame) {
+        const index = rooms.findIndex(room => room.code === code);
+        if (index !== -1) {
+            rooms[index].isMobileGame = isMobileGame;
+            return rooms[index].isMobileGame;
+        }
+        return null;
+    }
+
+    static getCards(code) {
+        const index = rooms.findIndex(room => room.code === code);
+        if (index !== -1) {
+            return [...rooms[index].cards]; // deep copy
+        }
+        return null;
+    }
+
+    static setCards(code, cards) {
+        const index = rooms.findIndex(room => room.code === code);
+        if (index !== -1) {
+            rooms[index].cards = cards;
+            return rooms[index].cards;
+        }
+        return null;
+    }
+
+    static cardLeave(code, index) {
+        const roomIndex = rooms.findIndex(room => room.code === code);
+        if (roomIndex !== -1) {
+            return rooms[roomIndex].cards.splice(index, 1)[0];
+        }
+    }
+
+    static removeRoom(code) {
+        const index = rooms.findIndex(room => room.code === code);
+        if (index !== -1) {
+            return rooms.splice(index, 1)[0];
+        }
     }
 }
 
-function removeRoom(code) {
-    const index = rooms.findIndex(room => room.code === code);
-    if (index !== -1) {
-        return rooms.splice(index, 1)[0];
-    }
-}
-
-module.exports = {
-    addRoom,
-    isValidRoom,
-    getChecked,
-    setChecked,
-    getInGame,
-    setInGame,
-    getCards,
-    setCards,
-    cardLeave,
-    removeRoom
-};
+module.exports = Rooms;
