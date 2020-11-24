@@ -59,6 +59,7 @@ socket.on('checkChanged', checked => {
 socket.on('roomUsers', ({room, users, checked, inGame}) => {
     usersList = users;
     $("#roomCode").text('Room Code: ' + room);
+    $("#connectedPlayers").text('Connected Players: ' + usersList.length);
     $("#mobileCheck").prop('checked', checked);
     if (inGame) {
         var start = $("#startGame");
@@ -106,11 +107,13 @@ function formatMobileGamePage(data, card) {
         socket.emit('endGame', code);
     });
     var timer = 5;
+    $("#reshuffle").prop("disabled", true);
     countdown = setInterval(function () {
         $("#countdown").text(timer);
         if (--timer < 0) {
             clearInterval(countdown);
             countdown = false;
+            $("#reshuffle").prop("disabled", false);
             $("#instructions").css("display","none");
             $("#card").attr("src", "cards/" + card);
             $("#reshuffle").click(() => {
@@ -125,7 +128,11 @@ socket.on('dealCard', (card) => {
     $("#exit").click(() => {
         socket.emit('endGame', code);
     });
+    if (countdown) {
+        clearTimeout(countdown);
+    }
     var timer = 5;
+    $("#reshuffle").prop("disabled", true);
     $("#countdown").text("Ready?");
     $("#instructions").css("display", "block");
     $("#card").attr("src", "cards/RED_BACK.svg");
@@ -134,6 +141,7 @@ socket.on('dealCard', (card) => {
         if (--timer < 0) {
             clearInterval(countdown);
             countdown = false;
+            $("#reshuffle").prop("disabled", false);
             $("#instructions").css("display", "none");
             $("#card").attr("src", "cards/" + card);
         }

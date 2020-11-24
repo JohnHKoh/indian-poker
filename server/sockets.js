@@ -83,7 +83,16 @@ module.exports.listen = function(server, sessionMiddleware) {
 
         socket.on('rejoinRoom', (code) => {
             joinRoom(code);
-            sendCards(code)
+            if (Rooms.getIsMobileGame(code)) {
+                let cards = Rooms.getCards(code);
+                let users = Users.getRoomUsers(code);
+                let rejoiner = users.findIndex(user => user.id === sessionID);
+                io.to(users[rejoiner].socketId).emit("newCard", cards[rejoiner]);
+            }
+            else {
+                sendCards(code)
+            }
+
         });
 
         function setInGameHandler(code, inGame) {
@@ -100,9 +109,11 @@ module.exports.listen = function(server, sessionMiddleware) {
             }
             setInGameHandler(code, true);
             if (Rooms.getChecked(code)) {
+                Rooms.setIsMobileGame(code, true);
                 startMobileGame(code, reshuffle);
             }
             else {
+                Rooms.setIsMobileGame(code, false);
                 startOnlineGame(code, reshuffle);
             }
         });
@@ -110,6 +121,7 @@ module.exports.listen = function(server, sessionMiddleware) {
         function startMobileGame(code, reshuffle) {
             let users = Users.getRoomUsers(code);
             let cards = shuffle(users.length);
+            Rooms.setCards(code, cards);
             var action = reshuffle ? 'dealCard' : 'newCard';
             for (let i = 0; i < users.length; i++) {
                 io.to(users[i].socketId).emit(action, cards[i]);
