@@ -131,3 +131,11 @@ a:not([href]):hover {
 .tooltip.bs-tooltip-top .arrow:before {
 	left: 8px;
 }
+
+#roomCodeInput {
+	text-transform:uppercase
+}
+
+#roomCodeInput::-webkit-input-placeholder {
+   text-transform: initial;
+}
