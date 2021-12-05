@@ -132,10 +132,10 @@ a:not([href]):hover {
 	left: 8px;
 }
 
-#roomCodeInput {
+#roomInput {
 	text-transform:uppercase
 }
 
-#roomCodeInput::-webkit-input-placeholder {
+#roomInput::-webkit-input-placeholder {
    text-transform: initial;
 }
