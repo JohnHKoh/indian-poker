@@ -2,7 +2,7 @@
 As of now, this "non-mobile" version of the game is not formatted well with mobile devices. Supports different rooms. 
 Written in Node.JS with Express and Socket.io. Cards assets taken from https://github.com/richardschneider/cardsJS.
 
-Currently hosted at http://indian-poker.herokuapp.com/.
+Currently hosted at http://indian-poker.tk/.
 
 ### The Rules
 
